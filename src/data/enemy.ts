@@ -29,6 +29,8 @@ export const enemy1Info: EnemyInfo = {
   deathSound: explosion1,
   scale: 0.5,
 };
+
+// 蔡徐坤
 export const enemy2Info: EnemyInfo = {
   id: "20002",
   name: "cxk",

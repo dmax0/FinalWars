@@ -1,9 +1,5 @@
 import Phaser from "phaser";
-export class Entity extends Phaser.Physics.Arcade.Sprite {
-    id: string;
-    name: string;
-    appearance: string;
-    scale?: string;
+export default class Entity extends Phaser.Physics.Arcade.Sprite {
 
     constructor(
         scene: Phaser.Scene,
@@ -16,5 +12,6 @@ export class Entity extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        
     }
 }

@@ -1,18 +1,19 @@
+import  GameScene  from "./scenes/GameScene";
 import { TestScene } from "./scenes/TestScene";
-
+import PreloadScene from "./scenes/PreloadScene";
 const config = {
   type: Phaser.AUTO,
-  width: 1000,
-  height: 700,
+  width: 800,
+  height: 650,
   physics: {
       default: "arcade",
       gravity: { y: 0 }
   },
-  zoom: 0.999,
+  zoom: 1.0,
   audio: {
       disableWebAudio: false
   },
-  scene: [TestScene],
+  scene: [PreloadScene, GameScene],
   parent: "app",
 }
 const game = new Phaser.Game(config);

@@ -1,6 +1,7 @@
 import Tom from "@/assets/images/players/tom.png";
 import Bullet1 from "@/assets/images/bullets/bullet1.png"
 import Shoot1 from "@/assets/sounds/bullets/shoot1.mp3"
+import TomBoom from "@/assets/images/players/tomBoom.png"
 import { State } from "@/entities/State";
 
 export interface PlayerInfo {
@@ -14,6 +15,8 @@ export interface PlayerInfo {
     state: State;
     scale: number;
     damage: number;
+    health: number;
+    boomAnimation: string;
 }
 export const playerInfo: PlayerInfo = {
     id: "10001",
@@ -26,4 +29,6 @@ export const playerInfo: PlayerInfo = {
     state: State.ACTIVE,
     scale: 0.8,
     damage: 10,
+    health: 100,
+    boomAnimation: TomBoom,
 }

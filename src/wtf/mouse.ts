@@ -3,6 +3,7 @@ export default class MouseController {
   sprite: Phaser.Physics.Arcade.Sprite;
   input: Phaser.Input.InputManager;
   scene: Phaser.Scene;
+  combos: Phaser.Input.Keyboard.KeyCombo[] = [];
   constructor(
     sprite: Phaser.Physics.Arcade.Sprite,
     input: Phaser.Input.InputPlugin,
@@ -12,6 +13,7 @@ export default class MouseController {
     this.sprite = sprite;
     this.scene = scene;
     this.onEvent();
+    this.specialAttack();
   }
 
   onEvent() {
@@ -33,5 +35,17 @@ export default class MouseController {
         this.sprite.setPosition(pointer.x, pointer.y);
       }
     });
+  }
+
+  specialAttack() {
+    // 组合键攻击
+    const combo = this.scene.input.keyboard.createCombo("CA", {
+      resetOnMatch: true,
+    });
+    this.scene.input.keyboard.on("keycombomatch", (event) => {
+      this.scene.playerPlane.specialAttack();
+      console.log("combo");
+    })
+    this.combos.push(combo);
   }
 }

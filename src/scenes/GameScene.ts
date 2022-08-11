@@ -12,24 +12,26 @@ import { BulletCollide } from "@/wtf/TouchManager";
 export default class GameScene extends Phaser.Scene {
   playerPlane: PlayerPlane;
   background: Background;
+  isGameOver: boolean = false;
   mouseController: MouseController;
   playerHealthBar: HealthBar;
   enemyInfo: EnemyInfo[];
   enemies: Enemy[];
-  enemyGenerator: EnemyGenerator;
+  enemyGenerators: EnemyGenerator[];
   bulletCollide: BulletCollide[];
-
   constructor() {
     super("GameScene");
     this.enemies = [];
     this.enemyInfo = [];
     this.bulletCollide = [];
+    this.enemyGenerators = [];
   }
   preload() {
     this.load.image(playerInfo.name, playerInfo.appearance);
     this.load.image(backgroundInfo.name, backgroundInfo.appearance);
     this.load.image(playerInfo.bulletAppearance, playerInfo.bulletAppearance);
     this.load.audio(playerInfo.shootSound, playerInfo.shootSound);
+    this.load.image(playerInfo.boomAnimation, playerInfo.boomAnimation);
 
     this.load.image(enemy1Info.name, enemy1Info.appearance);
     this.load.image(enemy1Info.boomAppearance, enemy1Info.boomAppearance);
@@ -57,27 +59,50 @@ export default class GameScene extends Phaser.Scene {
       this
     );
     this.playerHealthBar = new HealthBar(this, 20, 20, 10, 150);
-    this.enemyGenerator = new EnemyGenerator(
+    this.enemyGenerators.push(new EnemyGenerator(
       this,
       this.time,
       700,
       true,
       enemy2Info
-    );
-    
+    ));
 
-    this.playerPlane.fire();
-   
+    this.enemyGenerators.push(new EnemyGenerator(
+      this,
+      this.time,
+      1000,
+      true,
+      enemy1Info
+    ));
+    !this.isGameOver && this.playerPlane.fire();
+
   }
 
   update() {
-    this.background.scroll();
+    
     this.playerPlane.bulletsGroup.getChildren().forEach((bullet) => {
       if (bullet.active && bullet.y < -bullet.height) {
         this.playerPlane.bulletsGroup.killAndHide(bullet);
       }
     });
 
-    this.enemyGenerator.monitor();
+    this.enemyGenerators.forEach((generator) => {
+      generator.monitor();
+    });
+
+    if (this.isGameOver === true) {
+      // 清除所有物体
+      this.playerPlane.bulletsGroup.clear(true, true);
+      this.enemies.forEach((enemy) => {
+        enemy.destroy();
+      }
+      );
+      this.enemyGenerators.forEach((generator) => {
+        generator.destroy();
+      });
+      this.scene.start("GameOverScene");
+    } else {
+      this.background.scroll();
+    }
   }
 }

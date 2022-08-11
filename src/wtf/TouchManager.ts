@@ -2,6 +2,7 @@ import { EnemyInfo } from "@/data/enemy";
 import { PlayerInfo } from "@/data/player";
 import { Enemy } from "@/entities/Enemy";
 import PlayerPlane from "@/entities/PlayerPlane";
+import { State } from "@/entities/State";
 
 type ArcadeObject =
   | Phaser.Physics.Arcade.Sprite
@@ -30,6 +31,55 @@ export class TouchManager {
   }
 }
 
+// 敌机与我机相撞
+export class EnemyPlaneCollide extends TouchManager {
+  constructor(
+    scene: Phaser.Scene,
+    object1: Phaser.Physics.Arcade.Sprite,
+    object2: Phaser.Physics.Arcade.Sprite,
+  ) {
+    super(scene, object1, object2);
+    this.start();
+  }
+
+  enemyPlaneCollidePlayer(
+    enemy: Enemy,
+    player: PlayerPlane
+    
+  ) {
+    
+    if (player.health > 0) {
+      // 0.3s内我机只能受到一次伤害
+      if (player.lastDamageTime + 300 > this.scene.time.now) {
+        return;
+      }
+      player.lastDamageTime = this.scene.time.now;
+      player.health -= enemy.enemyInfo.damage;
+      
+      this.scene.playerHealthBar.decrease(enemy.enemyInfo.damage);
+
+      // enemy.destroy();
+    } else {
+      this.scene.playerPlane.State = State.DEAD;
+      this.scene.playerPlane.boom();
+      setTimeout(() => {
+        this.scene.isGameOver = true;
+      }, 300);
+      
+      
+    }
+  }
+  start() {
+    this.collider = this.scene.physics.add.overlap(
+      this.object1,
+      this.object2,
+      this.enemyPlaneCollidePlayer,
+      undefined,
+      this
+    );
+  }
+}
+
 export class BulletCollide extends TouchManager {
   enemyInfo: EnemyInfo;
   playerPlane: PlayerPlane;
@@ -53,7 +103,7 @@ export class BulletCollide extends TouchManager {
   }
 
   bulletCollideEnemy(
-    enemy: ArcadeObject,
+    enemy: Enemy,
     bullet: ArcadeObject
   ) {
     if (bullet.active && enemy.active) {
@@ -78,6 +128,7 @@ export class BulletCollide extends TouchManager {
         enemy.anims.play("explode", true);
         enemy.on("animationcomplete", () => {
           enemy.destroy();
+          
         });
       }
 

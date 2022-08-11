@@ -26,6 +26,14 @@ export default class HealthBar {
     this.draw();
     scene.add.existing(this.bar);
   }
+  fill() {
+    this.bar.fillRect(
+      this.x + 2,
+      this.y + 2,
+      this.width * (this.value / 100),
+      this.height
+    );
+  }
   draw() {
     this.bar.clear();
     // Background
@@ -33,19 +41,19 @@ export default class HealthBar {
     this.bar.fillRect(this.x, this.y, this.width, this.height);
     // HealthBar
     this.bar.fillStyle(0x00ff00, 1);
-    this.bar.fillRect(
-      this.x + 2,
-      this.y + 2,
-      this.width * (this.value / 100),
-      this.height
-    );
+    this.fill();
 
     if (this.value < 30) {
+
       this.bar.fillStyle(0xff0000, 1);
+      this.fill();
     } else if (this.value < 60) {
-      this.bar.fillStyle(0xffa500, 1);
+
+      this.bar.fillStyle(0xffff00, 1);
+      this.fill();
     } else {
-      this.bar.fillStyle(0xff00ff, 1);
+
+      this.bar.fillStyle(0x00ff00, 1);
     }
   }
   decrease(amount: number) {

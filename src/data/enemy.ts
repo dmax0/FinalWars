@@ -10,6 +10,7 @@ export interface EnemyInfo {
   appearance: string;
   speed: number;
   health: number;
+  damage: number;
   bulletAppearance?: string;
   boomAppearance?: string;
   hitSound?: string;
@@ -23,6 +24,7 @@ export const enemy1Info: EnemyInfo = {
   appearance: enemy1,
   speed: 100,
   health: 100,
+  damage: 10,
   bulletAppearance: enemy1Bullet,
   boomAppearance: enemy1Boom,
   hitSound: hit1,
@@ -32,11 +34,12 @@ export const enemy1Info: EnemyInfo = {
 
 // 蔡徐坤
 export const enemy2Info: EnemyInfo = {
-  id: "20002",
+  id: "250",
   name: "cxk",
   appearance: cxk,
   speed: 100,
   health: 100,
+  damage: 10,
   bulletAppearance: enemy1Bullet,
   boomAppearance: enemy1Boom ,
   hitSound: hit1,

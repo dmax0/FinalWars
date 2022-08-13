@@ -6,5 +6,8 @@ export default defineConfig({
         alias: {
             "@": join(__dirname, "src"),
         }
-    }
+    },
+   build: {
+        outDir: join(__dirname, "docs")
+   }
 })

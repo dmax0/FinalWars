@@ -1,6 +1,6 @@
 import GameOverLogo from "@/assets/images/gameOver.png";
 import GameoverSound from "@/assets/sounds/gameOver.mp3";
-import RestartButton from "@/assets/images/restartButton.png";
+import RestartButton from "@/assets/images/buttons/restartButton.png";
 export default class GameOverScene extends Phaser.Scene {
     private restartGame: Phaser.GameObjects.Image;
   constructor() {

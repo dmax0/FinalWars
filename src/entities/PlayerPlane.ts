@@ -10,9 +10,12 @@ export default class PlayerPlane extends Entity {
   bulletsGroup: Phaser.Physics.Arcade.Group;
   timer: Phaser.Time.TimerEvent;
   sound: Phaser.Sound.BaseSound;
-  playerinfo: PlayerInfo;
+  playerInfo: PlayerInfo;
+  skill: Phaser.GameObjects.Image;
   health: number;
-  private bulletsLevel: number = 3;
+  bulletInterval: number = 25;
+  skillMask: Phaser.Display.Masks.BitmapMask;
+  private bulletsLevel: number = 7;
 
   constructor(
     scene: Scene,
@@ -43,27 +46,22 @@ export default class PlayerPlane extends Entity {
   createBulletAt() {
     const X: number[] = [];
     const Y: number[] = [];
-    let sign = 1;
-    const bulletCount = this.bulletsLevel;
-
-    if (bulletCount % 2 === 0) {
-      for (let i = 1; i <= bulletCount; ++i) {
-        X.push(this.x + sign * (this.width / 4));
+    let sign = 1,
+      idx = 1;
+    if (this.bulletsLevel % 2 === 0) {
+      for (let i = 1; i <= this.bulletsLevel; ++i) {
+        if (i > 1 && i & (1 === 1)) idx++;
+        X.push(this.x + sign * this.bulletInterval * idx);
         Y.push(this.y - this.height / 2.5);
         sign *= -1;
       }
     } else {
-      let isMid = 0;
-      sign = -1;
-      for (let i = 1; i <= bulletCount; ++i) {
-        if (isMid === 0) {
-          X.push(this.x);
-          Y.push(this.y - this.height / 2);
-          isMid = 1;
-          continue;
-        }
-        X.push(this.x + sign * (this.width / 4));
-        Y.push(this.y - this.height / 2.8);
+      X.push(this.x);
+      Y.push(this.y - this.height / 2);
+      for (let i = 1; i < this.bulletsLevel; ++i) {
+        if (i > 1 && i & (1 === 1)) idx++;
+        X.push(this.x + sign * this.bulletInterval * idx);
+        Y.push(this.y - this.height / 3);
         sign *= -1;
       }
     }
@@ -92,13 +90,12 @@ export default class PlayerPlane extends Entity {
       bullet.setVelocityY(-this.playerInfo.shootSpeed);
       bullet.setActive(true);
       bullet.setVisible(true);
-      bullet.setScale(this.playerInfo.scale);
+      bullet.setScale(this.playerInfo.bulletScale);
     });
     // this.sound.play();
   }
   boom() {
-    this.anims.play(this.playerInfo.boomAnimation,true);
-    
+    this.anims.play(this.playerInfo.boomAnimation, true);
   }
   specialAttack() {
     // 闪现到开始位置
@@ -123,19 +120,45 @@ export default class PlayerPlane extends Entity {
   }
 
   loadData() {
-    const This = this;
+    
     this.scene.anims.create({
       key: this.playerInfo.boomAnimation,
       frames: [
         {
           key: this.playerInfo.boomAnimation,
           frame: 0,
-
-        }
-
+        },
       ],
       frameRate: 10,
       repeat: -1,
     });
+    this.skillMask = new Phaser.Display.Masks.BitmapMask(this.scene, this.skill);
+    this.skillMask.setBitmap(this.skill);
+    this.skill = this.scene.add
+      .image(
+        // 右下角
+        this.scene.game.config.width - this.width,
+        this.scene.game.config.height - this.height,
+        this.playerInfo.skillAppearance,
+        this
+      )
+      .setInteractive()
+      .setScale(0.5)
+      .setMask(this.skillMask)
+      .on("pointerover", () => {
+        this.skill.setScale(0.6);
+        this.scene.input.setDefaultCursor("pointer");
+      })
+      .on("pointerout", () => {
+        this.skill.setScale(0.5);
+        this.scene.input.setDefaultCursor("default");
+      })
+      .on("pointerdown", () => {
+        this.skill.setScale(0.5);
+        this.specialAttack();
+        
+      }).on("pointerup", () => {
+        this.scene.input.setDefaultCursor("default");
+      });
   }
 }

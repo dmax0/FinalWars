@@ -1,5 +1,8 @@
+
 import FinalWar from "@/assets/images/bg1.png";
-import startButton from "@/assets/images/startButton.png";
+import startButton from "@/assets/images/buttons/startButton.png";
+import { handleButtonEvent } from "@/utils/event";
+
 export default class PreloadScene extends Phaser.Scene {
     private homeSceneWidth: number;
   private homeSceneHeight: number;
@@ -15,12 +18,15 @@ export default class PreloadScene extends Phaser.Scene {
       width: this.homeSceneWidth,
       height: this.homeSceneHeight,
     });
+    
+   
   }
   create() {
     this.createBackground();
     this.createTitle();
     this.createStartButton();
-    this.handlestartEvent();
+    handleButtonEvent(this.startGame, this.scene, "OptonScene", {}, this);
+    
   }
   update() {}
 
@@ -65,23 +71,5 @@ export default class PreloadScene extends Phaser.Scene {
     );
   }
 
-  handlestartEvent() {
-    this.startGame.setInteractive(); // 让图片可交互
-    // 鼠标移入事件
-    this.startGame.on("pointerover", () => {
-      this.startGame.setScale(1.25);
-      this.input.setDefaultCursor("pointer");
-    });
-
-    //鼠标移出事件
-    this.startGame.on("pointerout", () => {
-      this.startGame.setScale(1.0);
-      this.input.setDefaultCursor("default");
-    });
-    // 鼠标点击事件
-    this.startGame.on("pointerdown", () => {
-      this.scene.start("GameScene");
-      this.input.setDefaultCursor("default");
-    });
-  }
+  
 }

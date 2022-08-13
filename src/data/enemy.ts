@@ -11,6 +11,7 @@ export interface EnemyInfo {
   speed: number;
   health: number;
   damage: number;
+  score: number;
   bulletAppearance?: string;
   boomAppearance?: string;
   hitSound?: string;
@@ -25,6 +26,7 @@ export const enemy1Info: EnemyInfo = {
   speed: 100,
   health: 100,
   damage: 10,
+  score: 0.4,
   bulletAppearance: enemy1Bullet,
   boomAppearance: enemy1Boom,
   hitSound: hit1,
@@ -40,9 +42,10 @@ export const enemy2Info: EnemyInfo = {
   speed: 100,
   health: 100,
   damage: 10,
+  score: 0.25,
   bulletAppearance: enemy1Bullet,
-  boomAppearance: enemy1Boom ,
+  boomAppearance: enemy1Boom,
   hitSound: hit1,
-  deathSound: explosion1 ,
-  scale: 0.75
+  deathSound: explosion1,
+  scale: 0.75,
 };

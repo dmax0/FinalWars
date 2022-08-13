@@ -2,6 +2,7 @@ import  GameScene  from "./scenes/GameScene";
 import { TestScene } from "./scenes/TestScene";
 import PreloadScene from "./scenes/PreloadScene";
 import GameOverScene from "./scenes/GameOverScene";
+import { OptionScene } from "./scenes/OptionScene";
 const config = {
   type: Phaser.AUTO,
   width: 800,
@@ -14,7 +15,7 @@ const config = {
   audio: {
       disableWebAudio: false
   },
-  scene: [PreloadScene, GameScene, GameOverScene],
+  scene: [PreloadScene, GameScene, GameOverScene, OptionScene],
   parent: "app",
 }
 const game = new Phaser.Game(config);

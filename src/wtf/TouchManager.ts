@@ -36,18 +36,14 @@ export class EnemyPlaneCollide extends TouchManager {
   constructor(
     scene: Phaser.Scene,
     object1: Phaser.Physics.Arcade.Sprite,
-    object2: Phaser.Physics.Arcade.Sprite,
+    object2: Phaser.Physics.Arcade.Sprite
   ) {
     super(scene, object1, object2);
     this.start();
   }
 
-  enemyPlaneCollidePlayer(
-    enemy: Enemy,
-    player: PlayerPlane
-    
-  ) {
-    
+  enemyPlaneCollidePlayer(enemy: Enemy, player: PlayerPlane) {
+    const rate = 100 / player.health;
     if (player.health > 0) {
       // 0.3s内我机只能受到一次伤害
       if (player.lastDamageTime + 300 > this.scene.time.now) {
@@ -55,8 +51,9 @@ export class EnemyPlaneCollide extends TouchManager {
       }
       player.lastDamageTime = this.scene.time.now;
       player.health -= enemy.enemyInfo.damage;
-      
-      this.scene.playerHealthBar.decrease(enemy.enemyInfo.damage);
+
+      const decreases = enemy.enemyInfo.damage * rate;
+      this.scene.playerHealthBar.decrease(decreases);
 
       // enemy.destroy();
     } else {
@@ -65,8 +62,6 @@ export class EnemyPlaneCollide extends TouchManager {
       setTimeout(() => {
         this.scene.isGameOver = true;
       }, 300);
-      
-      
     }
   }
   start() {
@@ -102,10 +97,7 @@ export class BulletCollide extends TouchManager {
     this.start();
   }
 
-  bulletCollideEnemy(
-    enemy: Enemy,
-    bullet: ArcadeObject
-  ) {
+  bulletCollideEnemy(enemy: Enemy, bullet: ArcadeObject) {
     if (bullet.active && enemy.active) {
       enemy.setAlpha(0.5);
       enemy.health -= this.playerPlane.playerInfo.damage;
@@ -117,21 +109,19 @@ export class BulletCollide extends TouchManager {
         this.sounds.hit.play();
       }
       if (enemy.health >= 0) {
-        this
-          .playerPlane
-          .bulletsGroup
-          .killAndHide(bullet);
+        this.playerPlane.bulletsGroup.killAndHide(bullet);
       }
 
       if (enemy.health <= 0) {
         this.sounds.death.play();
+
         enemy.anims.play("explode", true);
+        this.scene.Score += this.enemyInfo.score;
+        this.scene.ScoreText.changeText("Score:" + Math.round(this.scene.Score));
         enemy.on("animationcomplete", () => {
           enemy.destroy();
-          
         });
       }
-
     }
   }
 
